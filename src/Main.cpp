@@ -19,6 +19,7 @@ int main(int argc, char* argv[]) {
 
     Animation::FrameHolder run_holder = Animation::FrameHolder(running);
     run_holder.mirror(true, false);
+    run_holder.scale(0.5);
 
 
     QList<QImage*> idle = Sprites::fromImagePaths({
@@ -32,6 +33,7 @@ int main(int argc, char* argv[]) {
 
     Animation::FrameHolder idle_holder = Animation::FrameHolder(idle);
     idle_holder.mirror(true, false);
+    idle_holder.scale(0.5);
 
 
     Zephyr test;

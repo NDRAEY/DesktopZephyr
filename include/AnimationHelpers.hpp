@@ -18,6 +18,7 @@ namespace Animation {
         void setIndex(qsizetype index);
         QSize largestFrameSize();
         void mirror(bool horizontally, bool vertically);
+        void scale(double scale);
 
     private:
         QList<QImage*> anim_frames;

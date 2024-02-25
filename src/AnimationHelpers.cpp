@@ -66,3 +66,13 @@ void Animation::FrameHolder::mirror(bool horizontally, bool vertically) {
         image->mirror(horizontally, vertically);
     }
 }
+
+void Animation::FrameHolder::scale(double scale) {
+    for(QImage* image : anim_frames) {
+        int tw = (int)((double)image->width() * scale);
+        int ty = (int)((double)image->height() * scale);
+
+        // TODO: Maybe memory leak here?
+        *image = image->scaled(tw, ty);
+    }
+}

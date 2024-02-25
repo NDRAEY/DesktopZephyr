@@ -29,9 +29,6 @@ public:
 
     void showBubble(const QString& text, qsizetype duration);
 
-    void doSomething();
-    void doSomething2();
-
     QMap<QString, Animation::FrameHolder*> animations;
 protected:
     void mousePressEvent(QMouseEvent* event) override;

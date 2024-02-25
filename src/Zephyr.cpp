@@ -4,6 +4,7 @@
 
 #include "../include/Zephyr.hpp"
 #include <QTimer>
+#include <QApplication>
 
 Zephyr::Zephyr(QWidget *parent)
         : QWidget(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::X11BypassWindowManagerHint) {
@@ -48,7 +49,13 @@ Zephyr::~Zephyr() {
 
 void Zephyr::mouseMoveEvent(QMouseEvent *event) {
     if (event->buttons() & Qt::LeftButton) {
-        move(event->globalPosition().toPoint() - dragging_position);
+        auto position = event->globalPosition().toPoint() - dragging_position;
+        auto screen = ::QApplication::primaryScreen()->geometry();
+
+        if(position.y() + height() < screen.height()) {
+            move(position);
+        }
+
         event->accept();
     }
 }
@@ -58,26 +65,6 @@ void Zephyr::mousePressEvent(QMouseEvent *event) {
         dragging_position = event->globalPosition().toPoint() - frameGeometry().topLeft();
         event->accept();
     }
-}
-
-void Zephyr::doSomething() {
-    bubble->setFixedHeight(100);
-    bubble->setFixedWidth(250);
-    bubble->setText("Hello! I'm Zephyr and i'm in your computer! So this is Qt6 and after release, whole source code will be uploaded to GitHub. Zephyr tets test test. ZE-RA!!!");
-    bubble->show();
-
-    auto after_coords = geometry();
-    auto bubble_height = bubble->height();
-    move({after_coords.x(), after_coords.y() - bubble_height});
-}
-
-void Zephyr::doSomething2() {
-    auto after_coords = geometry();
-    auto bubble_height = bubble->height();
-
-    bubble->hide();
-
-    move({after_coords.x(), after_coords.y() + bubble_height});
 }
 
 void Zephyr::updatePixmap(bool switch_to_next) {

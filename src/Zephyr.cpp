@@ -5,6 +5,8 @@
 #include "../include/Zephyr.hpp"
 #include <QTimer>
 #include <QApplication>
+#include <QMenu>
+#include <QDateTime>
 
 Zephyr::Zephyr(QWidget *parent)
         : QWidget(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::X11BypassWindowManagerHint) {
@@ -39,9 +41,35 @@ Zephyr::Zephyr(QWidget *parent)
     connect(frameswitch_timer, &QTimer::timeout, this, [&](){
         updatePixmap();
     });
+
+    // Context Menu
+    setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(this, &QWidget::customContextMenuRequested,
+            this, &Zephyr::showContextMenu);
+
+
+    // Mouse tracking
+
+    mouse_tracker_thread = QThread::create([&](){
+        forever {
+            auto mouse_tracker_coords = QCursor::pos();
+
+            int win_x = this->x() + (this->width() / 2);
+
+            if(mouse_tracker_coords.x() <= win_x) {
+                lookLeft();
+            } else {
+                lookRight();
+            }
+        }
+    });
 }
 
 Zephyr::~Zephyr() {
+    frameswitch_timer->stop();
+    mouse_tracker_thread->quit();
+
     delete bubble;
     delete image_label;
     delete layout;
@@ -52,9 +80,10 @@ void Zephyr::mouseMoveEvent(QMouseEvent *event) {
         auto position = event->globalPosition().toPoint() - dragging_position;
         auto screen = ::QApplication::primaryScreen()->geometry();
 
-        if(position.y() + height() < screen.height()) {
-            move(position);
-        }
+        move({
+            position.x(),
+            qMin(position.y(), screen.height() - height())
+        });
 
         event->accept();
     }
@@ -62,6 +91,14 @@ void Zephyr::mouseMoveEvent(QMouseEvent *event) {
 
 void Zephyr::mousePressEvent(QMouseEvent *event) {
     if(event->button() == Qt::LeftButton) {
+        if(QDateTime::currentMSecsSinceEpoch() - last_click_ms < 250) {
+            qDebug() << "Double click!";
+
+            chaseTheCursor();
+        }
+
+        last_click_ms = QDateTime::currentMSecsSinceEpoch();
+
         dragging_position = event->globalPosition().toPoint() - frameGeometry().topLeft();
         event->accept();
     }
@@ -82,7 +119,9 @@ void Zephyr::updatePixmap(bool switch_to_next) {
 void Zephyr::setAnimation(const QString &name) {
     current_animation = animations.value(name);
 
-    this->setFixedSize(current_animation->largestFrameSize());
+    auto size = current_animation->largestFrameSize();
+
+    this->setFixedSize(size);
 }
 
 void Zephyr::startAnimation() {
@@ -120,5 +159,101 @@ void Zephyr::showBubble(const QString& text, qsizetype duration) {
         setFixedSize(cur_size);
 
         move({after_coords.x(), after_coords.y() + bubble_height});
+    });
+}
+
+void Zephyr::showContextMenu(const QPoint &pos) {
+    QMenu contextMenu(tr("Context menu"), this);
+
+    contextMenu.addAction(tr("Play music"), this, [&](){
+        showBubble("Let's go!", 2000);
+
+        auto* process = new QProcess();
+
+        process->start("vlc", {"/home/ndraey/Exyl_Save_This_WRLD.mp3"});
+
+        process->connect(process, &QProcess::finished, process, [&]() {
+            qDebug() << "Process finished!";
+        });
+
+        process_list.push_back(process);
+    });
+
+    contextMenu.addAction(tr("Exit"), this, [&](){
+        QApplication::quit();
+    });
+
+    contextMenu.exec(mapToGlobal(pos));
+}
+
+void Zephyr::lookLeft() {
+    if(!looking_direction) /* Is Left? */ {
+        return;
+    }
+
+    for(auto animation : animations) {
+        animation->mirror(true, false);
+    }
+
+    looking_direction = false;
+}
+
+void Zephyr::lookRight() {
+    if(looking_direction) /* Is Right? */ {
+        return;
+    }
+
+    for(auto animation : animations) {
+        animation->mirror(true, false);
+    }
+
+    looking_direction = true;
+}
+
+void Zephyr::enableMouseTracking() {
+    mouse_tracker_thread->start();
+}
+
+void Zephyr::disableMouseTracking() {
+    mouse_tracker_thread->quit();
+}
+
+void Zephyr::chaseTheCursor() {
+    showBubble("Hey!", 1000);
+
+    QTimer::singleShot(1000, this, [&]() {
+        setAnimation("run");
+
+        QThread* my = QThread::create([&]() {
+            forever {
+                QThread::msleep(25);
+
+                auto mypos = pos();
+                auto mousepos = QCursor::pos();
+
+                mousepos.setX(mousepos.x() - (size().width() / 2));
+                mousepos.setY(mousepos.y() - (size().height() / 2));
+
+                auto increment = mousepos - mypos;
+                auto distance = increment.manhattanLength();
+
+                qDebug() << mypos << " | " << mousepos << " | " << increment << " | " << distance;
+
+                if(distance < 15) {
+                    break;
+                }
+
+                // 9 is optimal speed for fun.
+                auto target = mypos + increment / (distance / 9);
+
+                move(target);
+            }
+        });
+
+        QThread::connect(my, &QThread::finished, my, [&]() {
+            setAnimation("idle");
+        });
+
+        my->start();
     });
 }

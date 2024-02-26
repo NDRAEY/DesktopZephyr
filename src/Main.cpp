@@ -2,6 +2,7 @@
 #include <QTimer>
 #include "../include/Zephyr.hpp"
 #include "../include/SpriteHelpers.hpp"
+#include "X11/WindowList.hpp"
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
@@ -18,7 +19,6 @@ int main(int argc, char* argv[]) {
     });
 
     Animation::FrameHolder run_holder = Animation::FrameHolder(running);
-    run_holder.mirror(true, false);
     run_holder.scale(0.5);
 
 
@@ -32,7 +32,6 @@ int main(int argc, char* argv[]) {
     });
 
     Animation::FrameHolder idle_holder = Animation::FrameHolder(idle);
-    idle_holder.mirror(true, false);
     idle_holder.scale(0.5);
 
 
@@ -43,6 +42,7 @@ int main(int argc, char* argv[]) {
     test.updatePixmap(false);
     test.show();
 
+    test.lookRight();
     test.startAnimation();
 
     test.move({-200, app.primaryScreen()->geometry().height() - test.height()});
@@ -73,6 +73,14 @@ int main(int argc, char* argv[]) {
 
         test.showBubble("ZE... RA? ZERA-ORA!", 3000);
     });
+
+    QTimer::singleShot(8000, &test, [&]() {
+        test.enableMouseTracking();
+    });
+
+    auto windows = PlatformSpecific::X11::GetWindowList();
+
+    qDebug() << windows;
 
     return app.exec();
 }

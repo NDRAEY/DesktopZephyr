@@ -10,10 +10,12 @@
 #include <QVBoxLayout>
 #include <qimage.h>
 #include <QLabel>
+#include <QProcess>
+#include <QThread>
 #include "TextBubble.hpp"
 #include "AnimationHelpers.hpp"
 
-#define ZEPH_FRAMESWITCH_RATE 8
+#define ZEPH_FRAMESWITCH_RATE 6
 
 class Zephyr : public QWidget {
 public:
@@ -28,6 +30,15 @@ public:
     void stopAnimation();
 
     void showBubble(const QString& text, qsizetype duration);
+    void showContextMenu(const QPoint &pos);
+
+    void enableMouseTracking();
+    void disableMouseTracking();
+
+    void lookLeft();
+    void lookRight();
+
+    void chaseTheCursor();
 
     QMap<QString, Animation::FrameHolder*> animations;
 protected:
@@ -46,4 +57,15 @@ private:
     TextBubble* bubble = nullptr;
 
     QTimer* frameswitch_timer = nullptr;
+
+    QList<QProcess*> process_list;
+
+    QThread* mouse_tracker_thread = nullptr;
+
+    // Left = false, Right = true
+    bool looking_direction = false;
+
+    // When last click on Zephyr happened?
+    qint64 last_click_ms = 0;
+
 };

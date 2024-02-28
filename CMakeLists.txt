@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.25)
 project(DesktopZephyr VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 qt_standard_project_setup()
 
-qt_add_executable(DesktopZephyr src/Main.cpp
+set(SOURCES src/Main.cpp
         src/TextBubble.cpp
         include/TextBubble.hpp
         src/Zephyr.cpp
@@ -14,16 +14,20 @@ qt_add_executable(DesktopZephyr src/Main.cpp
         src/SpriteHelpers.cpp
         include/SpriteHelpers.hpp
         src/AnimationHelpers.cpp
-        include/AnimationHelpers.hpp
-    )
+        include/AnimationHelpers.hpp)
+
+set(OS_SOURCES "")
+set(OS_LINK "")
 
 if(UNIX)
-    qt_add_executable(DesktopZephyr
-        src/X11/WindowList.cpp
+    set(OS_SOURCES src/X11/WindowList.cpp
         src/X11/WindowList.hpp)
 
-    target_link_libraries(DesktopZephyr PRIVATE Qt6::Core Qt6::Widgets X11)
-else()
-    target_link_libraries(DesktopZephyr PRIVATE Qt6::Core Qt6::Widgets)
+    set(OS_LINK X11)
 endif()
 
+qt_add_executable(DesktopZephyr
+	${SOURCES} ${OS_SOURCES} 
+)
+
+target_link_libraries(DesktopZephyr PRIVATE Qt6::Core Qt6::Widgets ${OS_LINK})

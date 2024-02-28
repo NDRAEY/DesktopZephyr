@@ -15,7 +15,15 @@ qt_add_executable(DesktopZephyr src/Main.cpp
         include/SpriteHelpers.hpp
         src/AnimationHelpers.cpp
         include/AnimationHelpers.hpp
+    )
+
+if(UNIX)
+    qt_add_executable(DesktopZephyr
         src/X11/WindowList.cpp
         src/X11/WindowList.hpp)
 
-target_link_libraries(DesktopZephyr PRIVATE Qt6::Core Qt6::Widgets X11)
+    target_link_libraries(DesktopZephyr PRIVATE Qt6::Core Qt6::Widgets X11)
+else()
+    target_link_libraries(DesktopZephyr PRIVATE Qt6::Core Qt6::Widgets)
+endif()
+

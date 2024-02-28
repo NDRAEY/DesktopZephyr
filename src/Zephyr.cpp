@@ -9,7 +9,7 @@
 #include <QDateTime>
 
 Zephyr::Zephyr(QWidget *parent)
-        : QWidget(parent, Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint) {
+    : QWidget(parent, Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint) {
     setAttribute(Qt::WA_TranslucentBackground);
 
     setMouseTracking(true);
@@ -225,7 +225,7 @@ void Zephyr::disableMouseTracking() {
 void Zephyr::chaseTheCursor() {
     showBubble("Hey!", 1000);
 
-    QTimer::singleShot(1000, this, [&]() {
+    QTimer::singleShot(1500, this, [&]() {
         setAnimation("run");
 
         cursor_chaser_timer.start(25);

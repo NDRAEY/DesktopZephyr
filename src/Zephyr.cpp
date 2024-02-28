@@ -9,15 +9,16 @@
 #include <QDateTime>
 
 Zephyr::Zephyr(QWidget *parent)
-        : QWidget(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::X11BypassWindowManagerHint) {
+        : QWidget(parent, Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint) {
     setAttribute(Qt::WA_TranslucentBackground);
+
+    setMouseTracking(true);
 
     // Layout
     layout = new QVBoxLayout(this);
 
     layout->setAlignment(Qt::AlignBottom);
 
-//    layout->setSizeConstraint(QLayout::SetFixedSize);
     layout->setContentsMargins(0, 0, 0, 0);
 
     // Bubble
@@ -48,6 +49,9 @@ Zephyr::Zephyr(QWidget *parent)
     connect(this, &QWidget::customContextMenuRequested,
             this, &Zephyr::showContextMenu);
 
+    // Mouse chasing
+
+    connect(&cursor_chaser_timer, &QTimer::timeout, this, &Zephyr::animateChasingFrame);
 
     // Mouse tracking
 
@@ -224,36 +228,30 @@ void Zephyr::chaseTheCursor() {
     QTimer::singleShot(1000, this, [&]() {
         setAnimation("run");
 
-        QThread* my = QThread::create([&]() {
-            forever {
-                QThread::msleep(25);
-
-                auto mypos = pos();
-                auto mousepos = QCursor::pos();
-
-                mousepos.setX(mousepos.x() - (size().width() / 2));
-                mousepos.setY(mousepos.y() - (size().height() / 2));
-
-                auto increment = mousepos - mypos;
-                auto distance = increment.manhattanLength();
-
-                qDebug() << mypos << " | " << mousepos << " | " << increment << " | " << distance;
-
-                if(distance < 15) {
-                    break;
-                }
-
-                // 9 is optimal speed for fun.
-                auto target = mypos + increment / (distance / 9);
-
-                move(target);
-            }
-        });
-
-        QThread::connect(my, &QThread::finished, my, [&]() {
-            setAnimation("idle");
-        });
-
-        my->start();
+        cursor_chaser_timer.start(25);
     });
+}
+
+void Zephyr::animateChasingFrame() {
+    auto mypos = pos();
+    auto mousepos = QCursor::pos();
+
+    mousepos.setX(mousepos.x() - (size().width() / 2));
+    mousepos.setY(mousepos.y() - (size().height() / 2));
+
+    auto increment = mousepos - mypos;
+    auto distance = increment.manhattanLength();
+
+//                qDebug() << mypos << " | " << mousepos << " | " << increment << " | " << distance;
+
+    if(distance < 15) {
+        cursor_chaser_timer.stop();
+        setAnimation("idle");
+        return;
+    }
+
+    // 9 is optimal speed for fun.
+    auto target = mypos + increment / (distance / 9);
+
+    move(target);
 }

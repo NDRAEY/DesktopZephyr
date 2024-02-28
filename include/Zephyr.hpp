@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QProcess>
 #include <QThread>
+#include <QTimer>
 #include "TextBubble.hpp"
 #include "AnimationHelpers.hpp"
 
@@ -68,4 +69,9 @@ private:
     // When last click on Zephyr happened?
     qint64 last_click_ms = 0;
 
+    QTimer cursor_chaser_timer;
+
+    void animateChasing();
+
+    void animateChasingFrame();
 };

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(DesktopZephyr VERSION 1.0.0 LANGUAGES CXX)
+project(DesktopZephyr VERSION 1.0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 

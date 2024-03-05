@@ -78,9 +78,5 @@ int main(int argc, char* argv[]) {
         test.enableMouseTracking();
     });
 
-//    auto windows = PlatformSpecific::X11::GetWindowList();
-//
-//    qDebug() << windows;
-
     return app.exec();
 }

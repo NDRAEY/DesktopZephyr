@@ -38,8 +38,8 @@ jobs:
         shell: pwsh
         run: Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-      - name: Install MinGw
-        run: choco install mingw
+      - name: Install MinGw and Zip
+        run: choco install mingw zip
 
       - name: Set up Qt
         uses: jurplel/install-qt-action@v3
@@ -54,11 +54,17 @@ jobs:
           cmake -G "MinGW Makefiles" ..
           cmake --build .
 
+      - name: Deploy app
+        run: D:/a/DesktopZephyr/Qt/6.5.1/mingw_64/bin/windeployqt.exe build/
+
+      - name: Archive app
+        run: zip -r DesktopZephyr_Windows.zip build/
+
       - name: Push binaries
         uses: actions/upload-artifact@v2
         with:
           name: windows-binaries
-          path: build/DesktopZephyr.exe
+          path: DesktopZephyr_Windows.zip
 
 
   upload_release:

@@ -12,7 +12,7 @@ jobs:
 
       - name: Install needed packages
         run: |
-          sudo apt install cmake clang-15 qt6-base-dev libglx-dev libgl1-mesa-dev libxkbcommon-dev autoconf automake autopoint git clang-15 python3 python3-is-python ruby libtool-bin gperf lzip gcc-mingw-w64-x86-64-posix -y
+          sudo apt install cmake clang-15 qt6-base-dev libglx-dev libgl1-mesa-dev libxkbcommon-dev autoconf automake autopoint git clang-15 python3 ruby libtool-bin gperf lzip gcc-mingw-w64-x86-64-posix -y
 
       - name: Build
         run: mkdir build && cd build && cmake .. && make -j$(nproc)

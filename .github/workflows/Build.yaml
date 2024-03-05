@@ -12,7 +12,7 @@ jobs:
 
       - name: Install needed packages
         run: |
-          sudo apt install cmake clang-15
+          sudo apt install cmake clang-15 qt6-base
 
       - name: Build
         run: mkdir build && cd build && cmake .. && make -j$(nproc)

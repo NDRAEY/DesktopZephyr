@@ -30,6 +30,35 @@ jobs:
 
       - name: Test
         run: echo HI!
+        
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up MinGW
+        uses: vsoftco/setup-mingw@v1
+        with:
+          mingw: 'x86_64'
+          msys2: true
+
+      - name: Set up Qt
+        uses: benlau/qt-cmake-action@v2
+        with:
+          qmake-version: '6'
+          cmake-args: '-DCMAKE_PREFIX_PATH=C:/Qt/6.x/mingw81_64'
+
+      - name: Configure and build
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+          cmake --build .
+
+      - name: Push binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-binaries
+          path: build/DesktopZephyr.exe
+
 
   upload_release:
     runs-on: ubuntu-latest
@@ -37,10 +66,16 @@ jobs:
     needs: [build_linux, build_windows]
 
     steps:
-      - name: Download artifacts
+      - name: Download artifacts (Linux)
         uses: actions/download-artifact@v2
         with:
           name: linux-binaries
+          path: artifacts/
+
+      - name: Download artifacts (Windows)
+        uses: actions/download-artifact@v2
+        with:
+          name: windows-binaries
           path: artifacts/
 
       - name: Test

@@ -16,3 +16,14 @@ jobs:
 
       - name: Build
         run: mkdir build && cd build && cmake .. && make -j$(nproc)
+
+      - name: Upload
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest-nightly"
+          prerelease: true
+          title: "Nightly release"
+          description: ""
+          files: |
+            build/DesktopZephyr

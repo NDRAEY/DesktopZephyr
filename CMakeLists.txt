@@ -38,4 +38,8 @@ qt_add_executable(DesktopZephyr
 	${SOURCES} ${OS_SOURCES} 
 )
 
+if(WIN32)
+    set_property(TARGET DesktopZephyr PROPERTY WIN32_EXECUTABLE true)
+endif()
+
 target_link_libraries(DesktopZephyr PRIVATE Qt6::Core Qt6::Widgets ${OS_LINK})

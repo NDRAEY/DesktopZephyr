@@ -5,25 +5,33 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build_linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
       - name: Install needed packages
         run: |
-          sudo apt install cmake clang-15 qt6-base-dev libglx-dev libgl1-mesa-dev libxkbcommon-dev autoconf automake autopoint git clang-15 python3 ruby libtool-bin gperf lzip gcc-mingw-w64-x86-64-posix intltool python3-mako -y
+          sudo apt install cmake clang-15 qt6-base-dev libglx-dev libgl1-mesa-dev libxkbcommon-dev -y
 
       - name: Build
         run: mkdir build && cd build && cmake .. && make -j$(nproc)
 
-      - name: Download MXE
-        run: |
-          git clone https://github.com/mxe/mxe.git --depth 1
 
-      - name: Build MXE
-        run: cd mxe && make qt
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
 
+      - name: Test
+        run: echo HI!
+
+  upload_release:
+    runs-on: ubuntu-latest
+
+    needs: [build_linux, build_windows]
+
+    steps:
       - name: Upload
         uses: "marvinpinto/action-automatic-releases@latest"
         with:

@@ -44,8 +44,8 @@ jobs:
       - name: Set up Qt
         uses: jurplel/install-qt-action@v3
         with:
-          qmake-version: '6'
-          cmake-args: '-DCMAKE_PREFIX_PATH=C:/Qt/6.x/mingw81_64'
+          version: '6.5.1'
+          arch: 'win64_mingw'
 
       - name: Configure and build
         run: |

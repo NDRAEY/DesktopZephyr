@@ -5,14 +5,53 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build_linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
       - name: Install needed packages
         run: |
-          sudo apt install cmake clang-15 qt6-base-dev
+          sudo apt install cmake clang-15 qt6-base-dev libglx-dev libgl1-mesa-dev libxkbcommon-dev -y
 
       - name: Build
         run: mkdir build && cd build && cmake .. && make -j$(nproc)
+
+      - name: Push binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-binaries
+          path: build/DesktopZephyr
+
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Test
+        run: echo HI!
+
+  upload_release:
+    runs-on: ubuntu-latest
+
+    needs: [build_linux, build_windows]
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: linux-binaries
+          path: artifacts/
+
+      - name: Test
+        run: ls -lh
+        
+      - name: Upload
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: artifacts/*
+          tag_name: latest-nightly
+          release_name: Latest ~${{ github.run_number }}
+          body: Automated release from GitHub Actions

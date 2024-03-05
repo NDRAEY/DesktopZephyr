@@ -8,14 +8,14 @@ int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
     QList<QImage*> running = Sprites::fromImagePaths({
-        "../res/running_1.png",
-        "../res/running_2.png",
-        "../res/running_3.png",
-        "../res/running_4.png",
-        "../res/running_5.png",
-        "../res/running_4.png",
-        "../res/running_3.png",
-        "../res/running_2.png"
+        ":/res/running_1.png",
+        ":/res/running_2.png",
+        ":/res/running_3.png",
+        ":/res/running_4.png",
+        ":/res/running_5.png",
+        ":/res/running_4.png",
+        ":/res/running_3.png",
+        ":/res/running_2.png"
     });
 
     Animation::FrameHolder run_holder = Animation::FrameHolder(running);
@@ -23,12 +23,12 @@ int main(int argc, char* argv[]) {
 
 
     QList<QImage*> idle = Sprites::fromImagePaths({
-          "../res/idle_1.png",
-          "../res/idle_2.png",
-          "../res/idle_3.png",
-          "../res/idle_4.png",
-          "../res/idle_5.png",
-          "../res/idle_6.png",
+          ":/res/idle_1.png",
+          ":/res/idle_2.png",
+          ":/res/idle_3.png",
+          ":/res/idle_4.png",
+          ":/res/idle_5.png",
+          ":/res/idle_6.png",
     });
 
     Animation::FrameHolder idle_holder = Animation::FrameHolder(idle);

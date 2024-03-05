@@ -6,7 +6,11 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 qt_standard_project_setup()
 
-set(SOURCES src/Main.cpp
+set(CMAKE_AUTORCC ON)
+
+set(SOURCES
+        main.qrc
+        src/Main.cpp
         src/TextBubble.cpp
         include/TextBubble.hpp
         src/Zephyr.cpp

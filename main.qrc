@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/idle.png</file>
+        <file>res/idle_1.png</file>
+        <file>res/idle_2.png</file>
+        <file>res/idle_3.png</file>
+        <file>res/idle_4.png</file>
+        <file>res/idle_5.png</file>
+        <file>res/idle_6.png</file>
+        <file>res/running_1.png</file>
+        <file>res/running_2.png</file>
+        <file>res/running_3.png</file>
+        <file>res/running_4.png</file>
+        <file>res/running_5.png</file>
+    </qresource>
+</RCC>

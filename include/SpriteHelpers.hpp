@@ -6,6 +6,7 @@
 
 #include <QImage>
 #include <QList>
+#include <QUrl>
 
 namespace Sprites {
     QList<QImage*> fromImagePaths(const QList<QString>& imagePaths);

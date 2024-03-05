@@ -12,7 +12,7 @@ jobs:
 
       - name: Install needed packages
         run: |
-          sudo apt install cmake clang-15 qt6-base-dev
+          sudo apt install cmake clang-15 qt6-base-dev libqt6gui6
 
       - name: Build
         run: mkdir build && cd build && cmake .. && make -j$(nproc)

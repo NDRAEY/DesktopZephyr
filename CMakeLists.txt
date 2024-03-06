@@ -1,16 +1,18 @@
 cmake_minimum_required(VERSION 3.25)
-project(DesktopZephyr VERSION 1.0.1 LANGUAGES CXX)
+
+file(STRINGS "include/Version.hpp" VERSION_STR REGEX "#define VERSION_STR")
+
+string(REGEX REPLACE "#define VERSION_STR \"(.*)\"" "\\1" PROJECT_VERSION ${VERSION_STR})
+
+project(DesktopZephyr VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
-# qt_standard_project_setup()
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-
-set(CMAKE_AUTORCC ON)
 
 set(SOURCES
         main.qrc
@@ -22,7 +24,10 @@ set(SOURCES
         src/SpriteHelpers.cpp
         include/SpriteHelpers.hpp
         src/AnimationHelpers.cpp
-        include/AnimationHelpers.hpp)
+        include/AnimationHelpers.hpp
+        src/AboutWindow.cpp
+        include/AboutWindow.hpp
+        include/Version.hpp)
 
 set(OS_SOURCES "")
 set(OS_LINK "")

@@ -78,5 +78,15 @@ int main(int argc, char* argv[]) {
         test.enableMouseTracking();
     });
 
-    return app.exec();
+    int code = app.exec();
+
+    foreach(const auto& i, running) {
+        delete i;
+    }
+
+    foreach(const auto& i, idle) {
+        delete i;
+    }
+
+    return code;
 }

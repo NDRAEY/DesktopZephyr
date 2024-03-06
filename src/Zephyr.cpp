@@ -7,6 +7,7 @@
 #include <QApplication>
 #include <QMenu>
 #include <QDateTime>
+#include "../include/AboutWindow.hpp"
 
 Zephyr::Zephyr(QWidget *parent)
     : QWidget(parent, Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint) {
@@ -57,6 +58,10 @@ Zephyr::Zephyr(QWidget *parent)
 
     mouse_tracker_thread = QThread::create([&](){
         forever {
+            if(this->is_freeing) {
+                break;
+            }
+
             auto mouse_tracker_coords = QCursor::pos();
 
             int win_x = this->x() + (this->width() / 2);
@@ -71,8 +76,11 @@ Zephyr::Zephyr(QWidget *parent)
 }
 
 Zephyr::~Zephyr() {
-    frameswitch_timer->stop();
+    is_freeing = true;
     mouse_tracker_thread->quit();
+    mouse_tracker_thread->wait();
+    frameswitch_timer->stop();
+    disconnect(&cursor_chaser_timer);
 
     delete bubble;
     delete image_label;
@@ -169,18 +177,9 @@ void Zephyr::showBubble(const QString& text, qsizetype duration) {
 void Zephyr::showContextMenu(const QPoint &pos) {
     QMenu contextMenu(tr("Context menu"), this);
 
-    contextMenu.addAction(tr("Play music"), this, [&](){
-        showBubble("Let's go!", 2000);
-
-        auto* process = new QProcess();
-
-        process->start("vlc", {"/home/ndraey/Exyl_Save_This_WRLD.mp3"});
-
-        process->connect(process, &QProcess::finished, process, [&]() {
-            qDebug() << "Process finished!";
-        });
-
-        process_list.push_back(process);
+    contextMenu.addAction(tr("About"), this, [&](){
+        auto* window = new AboutWindow();
+        window->show();
     });
 
     contextMenu.addAction(tr("Exit"), this, [&](){

@@ -1,0 +1,10 @@
+//
+// Created by ndraey on 6.3.2024.
+//
+
+#ifndef DESKTOPZEPHYR_VERSION_HPP
+#define DESKTOPZEPHYR_VERSION_HPP
+
+#define VERSION_STR "1.0.2"
+
+#endif //DESKTOPZEPHYR_VERSION_HPP

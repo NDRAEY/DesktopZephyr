@@ -16,7 +16,7 @@
 #include "TextBubble.hpp"
 #include "AnimationHelpers.hpp"
 
-#define ZEPH_FRAMESWITCH_RATE 6
+#define ZEPH_FRAMESWITCH_RATE 7
 
 class Zephyr : public QWidget {
 public:
@@ -47,6 +47,8 @@ protected:
     void mouseMoveEvent(QMouseEvent* event) override;
 
 private:
+    bool is_freeing = false;
+
     QVBoxLayout *layout = nullptr;
 
     Animation::FrameHolder* current_animation = nullptr;
@@ -59,8 +61,6 @@ private:
 
     QTimer* frameswitch_timer = nullptr;
 
-    QList<QProcess*> process_list;
-
     QThread* mouse_tracker_thread = nullptr;
 
     // Left = false, Right = true
@@ -70,8 +70,6 @@ private:
     qint64 last_click_ms = 0;
 
     QTimer cursor_chaser_timer;
-
-    void animateChasing();
 
     void animateChasingFrame();
 };

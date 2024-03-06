@@ -5,7 +5,7 @@ This project is an interactive character (AtelierRhyme's original character base
 
 ![img.png](readme-static/img.png)
 
-<div style="text-align: center;">Zephyr</div>
+<center><i>Zephyr</i></center>
 
 # Features
 
@@ -13,17 +13,21 @@ This project is an interactive character (AtelierRhyme's original character base
 - Double-click on it to make it chase your cursor!
 - Right-click on it to see additional options in conetxt menu.
 
-# Requirements
+# Downloads
+
+You can download prebuilt Linux and Windows binaries from [Releases](https://github.com/NDRAEY/DesktopZephyr/releases) page.
+
+For Windows users: If you downloaded zip file from Releases, unpack it, go to `build` folder and run `DesktopZephyr.exe`.
+
+If you want to build DesktopZephyr yourself, follow the instructions below.
+
+# Build requirements
 
 - Qt 6.0 or newer
 - CMake 3.25 or newer
 - Clang (> 12) or GCC (not tested yet) compiler
 
-# Downloads
-
-Download Linux or Windows binaries from [Releases](https://github.com/NDRAEY/DesktopZephyr/releases) page.
-
-# Build
+# Build instructions
 
 To download Desktop Zephyr source code, run:
 ```sh

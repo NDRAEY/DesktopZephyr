@@ -85,6 +85,7 @@ Zephyr::~Zephyr() {
     delete bubble;
     delete image_label;
     delete layout;
+    delete mouse_tracker_thread;
 }
 
 void Zephyr::mouseMoveEvent(QMouseEvent *event) {
@@ -240,8 +241,6 @@ void Zephyr::animateChasingFrame() {
 
     auto increment = mousepos - mypos;
     auto distance = increment.manhattanLength();
-
-//                qDebug() << mypos << " | " << mousepos << " | " << increment << " | " << distance;
 
     if(distance < 15) {
         cursor_chaser_timer.stop();

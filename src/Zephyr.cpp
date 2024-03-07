@@ -105,8 +105,6 @@ void Zephyr::mouseMoveEvent(QMouseEvent *event) {
 void Zephyr::mousePressEvent(QMouseEvent *event) {
     if(event->button() == Qt::LeftButton) {
         if(QDateTime::currentMSecsSinceEpoch() - last_click_ms < 250) {
-            qDebug() << "Double click!";
-
             chaseTheCursor();
         }
 
@@ -146,11 +144,12 @@ void Zephyr::stopAnimation() {
 }
 
 void Zephyr::showBubble(const QString& text, qsizetype duration) {
-    bubble->setFixedHeight(100);
-    bubble->setFixedWidth(250);
+    auto metrics = bubble->getFontMetrics();
+    auto measurement = metrics.boundingRect({0, 0, bubble->width(), 0}, Qt::TextWordWrap, text);
+
+    bubble->setFixedHeight(measurement.height() + 20);
     bubble->setText(text);
     bubble->show();
-
 
     auto cur_size = size();
     auto after_coords = geometry();

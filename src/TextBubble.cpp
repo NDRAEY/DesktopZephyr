@@ -4,28 +4,29 @@
 
 #include "../include/TextBubble.hpp"
 
-#include <QPainter>
-
 TextBubble::TextBubble(QWidget* parent)
-: QWidget(parent) {}
+: QWidget(parent) {
+    font.setFamily("Arial");
+    font.setPointSize(12);
+}
 
 void TextBubble::paintEvent(QPaintEvent *) {
     QPainter painter(this);
-
     painter.setPen([&]() {
         QPen pen;
         pen.setColor(border_color);
         pen.setWidth(5);
         return pen;
     }());
-    painter.setBrush(background_color);
+    painter.setFont(font);
 
+    painter.setBrush(background_color);
     painter.drawRect(0, 0, width(), height());
 
     if(!text.isEmpty()) {
-        QFontMetrics ruler(painter.font());
+//        QFontMetrics ruler(painter.font());
 
-        auto size = ruler.boundingRect(text);
+//        auto size = ruler.boundingRect(text);
 //        auto coords = QPoint{size.width(), size.height()};
         auto limit = QRect{10, 10, width() - 20, height() - 20};
 
@@ -47,3 +48,6 @@ void TextBubble::setText(const QString &text) {
     this->text = text;
 }
 
+QFontMetrics TextBubble::getFontMetrics() const {
+    return QFontMetrics(font);
+}

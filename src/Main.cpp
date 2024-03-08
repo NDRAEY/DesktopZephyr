@@ -77,12 +77,12 @@ int main(int argc, char* argv[]) {
     QTimer::singleShot(8000, &test, [&] {
         test.enableMouseTracking();
     });
-
-    auto winlist = PlatformSpecific::X11::GetWindowList();
-
-    foreach(const auto& i, winlist) {
-        qDebug() << i;
-    }
+    //
+    // auto winlist = PlatformSpecific::X11::GetWindowList();
+    //
+    // foreach(const auto& i, winlist) {
+    //     qDebug() << i;
+    // }
 
 
     int code = app.exec();

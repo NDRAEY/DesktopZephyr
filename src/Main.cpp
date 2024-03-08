@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
     });
     introtimer.start(50);
 
-    QTimer::singleShot(5000, &test, [&]() {
+    QTimer::singleShot(5000, &test, [&] {
         introtimer.stop();
 
         test.stopAnimation();
@@ -74,9 +74,16 @@ int main(int argc, char* argv[]) {
         test.showBubble("ZE... RA? ZERA-ORA!", 3000);
     });
 
-    QTimer::singleShot(8000, &test, [&]() {
+    QTimer::singleShot(8000, &test, [&] {
         test.enableMouseTracking();
     });
+
+    auto winlist = PlatformSpecific::X11::GetWindowList();
+
+    foreach(const auto& i, winlist) {
+        qDebug() << i;
+    }
+
 
     int code = app.exec();
 

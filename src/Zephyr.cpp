@@ -71,6 +71,8 @@ Zephyr::Zephyr(QWidget *parent)
             } else {
                 lookRight();
             }
+
+            QThread::msleep(25);
         }
     });
 }

@@ -42,8 +42,14 @@ if(UNIX)
     set(OS_LINK X11)
 endif()
 
+
+if(WIN32)
+    enable_language("RC")
+    set (OS_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/res/resources.rc)
+endif()
+
 qt_add_executable(DesktopZephyr
-	${SOURCES} ${OS_SOURCES} 
+    ${SOURCES} ${OS_SOURCES}
 )
 
 if(WIN32)

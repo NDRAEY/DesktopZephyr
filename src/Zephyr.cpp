@@ -163,28 +163,28 @@ void Zephyr::showBubble(const QString& text, qsizetype duration) {
     move({after_coords.x(), after_coords.y() - bubble_height});
 
     QTimer::singleShot(duration, this, [&](){
-        auto after_coords = geometry();
-        auto bubble_height = bubble->height();
+        auto coords = geometry();
+        auto after_bubble_height = bubble->height();
 
         bubble->hide();
 
-        auto cur_size = size();
-        cur_size.setHeight(cur_size.height() - bubble_height);
-        setFixedSize(cur_size);
+        auto sz = size();
+        sz.setHeight(sz.height() - after_bubble_height);
+        setFixedSize(sz);
 
-        move({after_coords.x(), after_coords.y() + bubble_height});
+        move({coords.x(), coords.y() + after_bubble_height});
     });
 }
 
 void Zephyr::showContextMenu(const QPoint &pos) {
     QMenu contextMenu(tr("Context menu"), this);
 
-    contextMenu.addAction(tr("About"), this, [&](){
+    contextMenu.addAction(tr("About"), this, [&] {
         auto* window = new AboutWindow();
         window->show();
     });
 
-    contextMenu.addAction(tr("Exit"), this, [&](){
+    contextMenu.addAction(tr("Exit"), this, [&]{
         QApplication::quit();
     });
 
@@ -196,7 +196,7 @@ void Zephyr::lookLeft() {
         return;
     }
 
-    for(auto animation : animations) {
+    for(const auto animation : animations) {
         animation->mirror(true, false);
     }
 
@@ -208,18 +208,18 @@ void Zephyr::lookRight() {
         return;
     }
 
-    for(auto animation : animations) {
+    for(const auto animation : animations) {
         animation->mirror(true, false);
     }
 
     looking_direction = true;
 }
 
-void Zephyr::enableMouseTracking() {
+void Zephyr::enableMouseTracking() const {
     mouse_tracker_thread->start();
 }
 
-void Zephyr::disableMouseTracking() {
+void Zephyr::disableMouseTracking() const {
     mouse_tracker_thread->quit();
 }
 

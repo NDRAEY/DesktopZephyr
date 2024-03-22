@@ -47,9 +47,11 @@ QList<std::pair<QString, QPoint>> PlatformSpecific::X11::GetWindowList() {
             XFree(windowName);
         }
 
-        list.push_back({
-            name, {x, y}
-        });
+        if(!name.isEmpty()) {
+            list.push_back({
+                name, {x, y}
+            });
+        }
     }
 
     XFree(children);

@@ -33,8 +33,8 @@ public:
     void showBubble(const QString& text, qsizetype duration);
     void showContextMenu(const QPoint &pos);
 
-    void enableMouseTracking();
-    void disableMouseTracking();
+    void enableMouseTracking() const;
+    void disableMouseTracking() const;
 
     void lookLeft();
     void lookRight();

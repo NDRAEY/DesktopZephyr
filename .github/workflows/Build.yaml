@@ -31,7 +31,7 @@ jobs:
 
       - name: Install needed packages
         run: |
-          sudo dpkg --add-architecture i386
+          sudo dpkg --add-architecture i386 && |
           sudo apt install cmake clang-15 g++-multilib qt6-base-dev:i386 libglx-dev:i386 |
           libgl1-mesa-dev:i386 libxkbcommon-dev:i386 -y
 

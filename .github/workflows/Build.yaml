@@ -31,7 +31,7 @@ jobs:
 
       - name: Install needed packages
         run: |
-          sudo dpkg --add-architecture i386 && sudo apt update && sudo apt install cmake clang-15 g++-multilib qt6-base-dev:i386 libglx-dev:i386 libgl1-mesa-dev:i386 libxkbcommon-dev:i386 -y
+          sudo dpkg --add-architecture i386 && sudo apt update && sudo apt list qt6* && sudo apt install cmake clang-15 g++-multilib qt6-base-dev:i386 libglx-dev:i386 libgl1-mesa-dev:i386 libxkbcommon-dev:i386 -y
 
       - name: Build
         run: mkdir build && cd build && CXX=clang-15 cmake -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_FIND_ROOT_PATH=/usr/lib/i386-linux-gnu/cmake .. && make -j$(nproc)

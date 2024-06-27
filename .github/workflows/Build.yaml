@@ -25,7 +25,7 @@ jobs:
           path: build/DesktopZephyr
           
   build_linux32:
-    runs-on: ubuntu-latest
+    runs-on: debian-latest
     steps:
       - uses: actions/checkout@v3
 
